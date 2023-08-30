@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pipbox"
+version = "0.0.1"
+description = "pipbox prototype"
+readme = "README.md"
+authors = [
+    {name = "Carlos Corral-Williams", email = "c0rwil@protonmail.com"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "build",
+    "setuptools",
+    "black",
+    "pytest",
+    "importlib_metadata",
+]
+
+[project.scripts]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["test"]
