@@ -18,8 +18,6 @@ dependencies = [
     "pytest",
     "importlib_metadata",
     "toml",
-    "subprocess",
-    "sys",
 ]
 
 [project.scripts]
