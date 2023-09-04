@@ -5,10 +5,9 @@ import toml as toml
 
 
 class MetaToml:
-    """ An object to hold v
+    """ An object to hold necessary attributes for parsing a variety of metadata
     """
 
-    # PIP_FREEZE = [executable, 'm', 'pip', 'freeze']
     __attrs__ = [
         "source_file_path",
         "exclusions_file_path",
@@ -19,6 +18,14 @@ class MetaToml:
 
     def __init__(self, absolute_file_path: str, dependencies=None, exclusions_files_path: str = None,
                  exclusions=None):
+        """
+        :param absolute_file_path: required to instantiate object, path to file to parse from
+            #TODO: make this recursively append files from directory instead of 1 file?
+        :param dependencies: can be added manually or will be populated later using class functions
+        :param exclusions_files_path: optional filepath to excluded_from_uninstall packages
+        :param exclusions: can be added manually in instantiation as a list of strings, or populated by class
+        """
+
         if dependencies is None:
             dependencies = []
         if exclusions is None:
