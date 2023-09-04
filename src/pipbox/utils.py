@@ -1,9 +1,9 @@
 from subprocess import check_call, check_output
-import sys
-import os
+from sys import executable
+from os import path
 import toml as toml
 
-PIP_FREEZE = [sys.executable, 'm', 'pip', 'freeze']
+PIP_FREEZE = [executable, 'm', 'pip', 'freeze']
 
 
 def fetch_file_metadata_toml(absolute_file_path: str, toml_var: str = "META_TOML"):
@@ -14,7 +14,7 @@ def fetch_file_metadata_toml(absolute_file_path: str, toml_var: str = "META_TOML
     """
     meta_toml = ""
     try:
-        if os.path.exists(absolute_file_path):
+        if path.exists(absolute_file_path):
             with open(absolute_file_path, 'r') as file:
                 line = file.readline()
                 while line:
@@ -60,7 +60,7 @@ def pip_install_dependencies(dependencies: list):
     :param dependencies: list of pypi package names to install
     """
     for dependency in dependencies:
-        check_call([sys.executable, '-m', 'pip', 'install', dependency])
+        check_call([executable, '-m', 'pip', 'install', dependency])
     reqs = check_output(PIP_FREEZE)
 
     installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
@@ -80,7 +80,7 @@ def pip_uninstall_dependencies(dependencies: list, exclusions: list = None):
             uninstall_list.append(dependency)
 
     for dependency in uninstall_list:
-        check_call([sys.executable, '-m', 'pip', 'uninstall', dependency, '-y'])
+        check_call([executable, '-m', 'pip', 'uninstall', dependency, '-y'])
     reqs = check_output(PIP_FREEZE)
 
     installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
