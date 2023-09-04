@@ -1,7 +1,7 @@
 from subprocess import check_call, check_output
 from sys import executable
 from os import path
-import toml as toml
+from src.easypip.util import tomlify
 
 
 class MetaToml:
@@ -64,34 +64,12 @@ class MetaToml:
     def set_dependencies(self, dependencies: list):
         self.dependencies = dependencies
 
-    def set_metadata_from_toml(self, toml_var: str = "META_TOML"):
+    def update_metadata(self, toml_var: str = "META_TOML"):
         """ set metadata toml from file into a variable for use by metatoml
         :param toml_var: variable name that is storing toml string
         """
-        meta_toml = ""
-        try:
-            source_file_path = self.source_file_path
-            if path.exists(source_file_path):
-                with open(source_file_path, 'r') as file:
-                    line = file.readline()
-                    while line:
-                        if toml_var in line:
-                            line = file.readline()
-                            while '\"\"\"' not in line:
-                                meta_toml += line
-                                line = file.readline()
-                            break
-                        else:
-                            line = file.readline()
-        except Exception as exc:
-            print(f"error while trying to read file's metadata, exception: \n {exc}")
-        finally:
-            derived_toml = []
-            try:
-                derived_toml = toml.loads(meta_toml)
-            except toml.TomlDecodeError:
-                print("Error decoding TOML from file")
-            self.set_metadata(derived_toml)
+        derived_toml = tomlify(absolute_file_path=self.get_source_file_path(), toml_var=toml_var)
+        self.set_metadata(derived_toml)
 
     # def parse_all_from_toml(self):
     #     """"""
@@ -99,7 +77,7 @@ class MetaToml:
     #     for header in derived_md:
     #         for i in header:
     #             self
-    def parse_dependencies_from_toml(self, toml_table_key: str = "project", toml_table_value: str = "dependencies"):
+    def parse_dependencies(self, toml_table_key: str = "project", toml_table_value: str = "dependencies"):
         """
             :param toml_table_value: variable name in toml that you want to pull a list from
             :param toml_table_key: subheading / table name in TOML holding the dependencies variable
