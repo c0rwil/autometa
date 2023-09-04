@@ -1,4 +1,4 @@
-"""easypip.execute"""
+"""easypip api"""
 from . import utils
 
 
