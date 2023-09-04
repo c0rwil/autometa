@@ -4,7 +4,7 @@ from os import path
 import toml as toml
 
 
-class MetadataTOML:
+class MetaToml:
     """ An object to hold v
     """
 
