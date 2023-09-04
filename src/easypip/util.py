@@ -16,12 +16,12 @@ def tomlify(absolute_file_path: str, toml_var:str = "META_TOML"):
             toml_contents = toml.dumps(json_contents)
     elif absolute_file_path.endswith('.toml'):
         with open(absolute_file_path, 'r') as toml_file:
-            toml_contents = toml.load(absolute_file_path)
+            toml_contents = toml.load(toml_file)
     elif absolute_file_path.endswith('.py'):
         toml_contents = load_toml_from_meta_toml_str(absolute_file_path=absolute_file_path, toml_var=toml_var)
         derived_toml = []
     try:
-        derived_toml = toml.loads(toml_contents)
+        derived_toml = toml.dumps(toml_contents)
     except toml.TomlDecodeError:
         print("Error decoding TOML from file")
     return derived_toml
