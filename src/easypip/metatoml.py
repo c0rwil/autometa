@@ -65,9 +65,8 @@ class MetaToml:
         self.dependencies = dependencies
 
     def set_metadata_from_toml(self, toml_var: str = "META_TOML"):
-        """ Returns metadata toml from file into a variable for use by script
+        """ set metadata toml from file into a variable for use by metatoml
         :param toml_var: variable name that is storing toml string
-        :return: meta toml
         """
         meta_toml = ""
         try:
@@ -94,6 +93,12 @@ class MetaToml:
                 print("Error decoding TOML from file")
             self.set_metadata(derived_toml)
 
+    # def parse_all_from_toml(self):
+    #     """"""
+    #     derived_md = self.get_file_metadata()
+    #     for header in derived_md:
+    #         for i in header:
+    #             self
     def parse_dependencies_from_toml(self, toml_table_key: str = "project", toml_table_value: str = "dependencies"):
         """
             :param toml_table_value: variable name in toml that you want to pull a list from
