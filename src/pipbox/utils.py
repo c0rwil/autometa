@@ -1,21 +1,24 @@
-import subprocess
-import sys
-import os
+from subprocess import check_call, check_output
+from sys import executable
+from os import path
 import toml as toml
 
+PIP_FREEZE = [executable, 'm', 'pip', 'freeze']
 
-def read_file_metadata_toml(absolute_file_path: str):
-    """Reads metadata toml from file into a variable for use by script
+
+def fetch_file_metadata_toml(absolute_file_path: str, toml_var: str = "META_TOML"):
+    """Returns metadata toml from file into a variable for use by script
+    :param toml_var: variable name that is storing toml string
     :param absolute_file_path: path/to/file
     :return: meta toml
     """
     meta_toml = ""
     try:
-        if os.path.exists(absolute_file_path):
+        if path.exists(absolute_file_path):
             with open(absolute_file_path, 'r') as file:
                 line = file.readline()
                 while line:
-                    if "META_TOML" in line:
+                    if toml_var in line:
                         line = file.readline()
                         while '\"\"\"' not in line:
                             meta_toml += line
@@ -24,30 +27,30 @@ def read_file_metadata_toml(absolute_file_path: str):
                     else:
                         line = file.readline()
     except Exception as exc:
-        print(f"error while trying to read file metadata, exception: \n {exc}")
-        return 0
+        print(f"error while trying to fetch file metadata, exception: \n {exc}")
     finally:
-        if meta_toml.strip() == "":
-            return 0
+        derived_toml = []
         try:
             derived_toml = toml.loads(meta_toml)
         except toml.TomlDecodeError:
             print("Error decoding TOML from file")
-            return 0
         return derived_toml
 
 
-def read_dependencies_from_metadata_toml(derived_toml):
+def fetch_dependencies_from_metadata_toml(derived_toml, toml_table_key: str = "project",
+                                          toml_table_value: str = "dependencies"):
     """
+    :param toml_table_value: variable name in toml that you want to pull a list from
+    :param toml_table_key: subheading / table name in TOML holding the dependencies variable
     :param derived_toml: ingested metadata toml
     :return: list of strings, pip-package install-list if present
     """
-    dependencies = ""
+    dependencies = []
     try:
-        if 'project' in derived_toml and 'dependencies' in derived_toml['project']:
-            dependencies = derived_toml['project']['dependencies']
+        if toml_table_key in derived_toml and toml_table_value in derived_toml[toml_table_key]:
+            dependencies = derived_toml[toml_table_key][toml_table_value]
     except Exception as exc:
-        raise Exception(f"Failed to read dependencies: {exc}")
+        raise Exception(f"Failed to fetch dependencies: {exc}")
     if dependencies:
         return dependencies
 
@@ -57,8 +60,8 @@ def pip_install_dependencies(dependencies: list):
     :param dependencies: list of pypi package names to install
     """
     for dependency in dependencies:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', dependency])
-    reqs = subprocess.check_output([sys.executable, 'm', 'pip', 'freeze'])
+        check_call([executable, '-m', 'pip', 'install', dependency])
+    reqs = check_output(PIP_FREEZE)
 
     installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
     for dependency in dependencies:
@@ -68,15 +71,55 @@ def pip_install_dependencies(dependencies: list):
 
 def pip_uninstall_dependencies(dependencies: list, exclusions: list = None):
     """ attempts to pip uninstall packages listed
-    :param exclusions:
+    :param exclusions: list of pypi packages to never uninstall
     :param dependencies: list of pypi package names to install
     """
+    uninstall_list = []
     for dependency in dependencies:
         if dependency not in exclusions:
-            subprocess.check_call([sys.executable, '-m', 'pip', 'uninstall', dependency, '-y'])
-    reqs = subprocess.check_output([sys.executable, 'm', 'pip', 'freeze'])
+            uninstall_list.append(dependency)
+
+    for dependency in uninstall_list:
+        check_call([executable, '-m', 'pip', 'uninstall', dependency, '-y'])
+    reqs = check_output(PIP_FREEZE)
 
     installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
-    for dependency in dependencies:
-        if dependency in installed_packages and dependency not in exclusions:
+    for dependency in uninstall_list:
+        if dependency in installed_packages and dependency in uninstall_list:
             raise Exception(f"failed to pip uninstall {dependency}")
+
+
+def fetch_dependencies_and_pip_install(absolute_file_path: str, toml_var_name: str = "META_TOML",
+                                       toml_table_key: str = "project",
+                                       toml_table_value: str = "dependencies"):
+    try:
+        fetched_toml = fetch_file_metadata_toml(absolute_file_path=absolute_file_path, toml_var=toml_var_name)
+        dependency_list = fetch_dependencies_from_metadata_toml(derived_toml=fetched_toml,
+                                                                toml_table_key=toml_table_key,
+                                                                toml_table_value=toml_table_value)
+        pip_install_dependencies(dependencies=dependency_list)
+        print(f"Successfully installed all dependencies...\n {dependency_list}")
+    except Exception as exc:
+        print(f"exception occurred: \n {exc}")
+
+
+def fetch_dependencies_and_pip_uninstall(absolute_file_path: str, toml_var_name: str = "META_TOML",
+                                         toml_table_key: str = "project",
+                                         toml_table_value: str = "dependencies",
+                                         excluded_dependencies_path: str = None):
+    try:
+        fetched_toml = fetch_file_metadata_toml(absolute_file_path=absolute_file_path, toml_var=toml_var_name)
+        dependency_list = fetch_dependencies_from_metadata_toml(derived_toml=fetched_toml,
+                                                                toml_table_key=toml_table_key,
+                                                                toml_table_value=toml_table_value)
+        exclusions_list = []
+        if excluded_dependencies_path:
+            exclusions_toml = fetch_file_metadata_toml(absolute_file_path=excluded_dependencies_path,
+                                                       toml_var=toml_var_name)
+            exclusions_list = fetch_dependencies_from_metadata_toml(derived_toml=exclusions_toml,
+                                                                    toml_table_key=toml_table_key,
+                                                                    toml_table_value=toml_table_value)
+        pip_uninstall_dependencies(dependencies=dependency_list, exclusions=exclusions_list)
+        print(f"Successfully installed all dependencies...\n {dependency_list}")
+    except Exception as exc:
+        print(f"exception occurred: \n {exc}")
