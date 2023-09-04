@@ -51,6 +51,12 @@ class MetaToml:
         ge = self.exclusions
         return ge
 
+    def set_metadata(self, metadata):
+        self.metadata = metadata
+
+    def set_dependencies(self, dependencies: list):
+        self.dependencies = dependencies
+
     def set_metadata_from_toml(self, toml_var: str = "META_TOML"):
         """ Returns metadata toml from file into a variable for use by script
         :param toml_var: variable name that is storing toml string
@@ -79,7 +85,7 @@ class MetaToml:
                 derived_toml = toml.loads(meta_toml)
             except toml.TomlDecodeError:
                 print("Error decoding TOML from file")
-            self.__setattr__(self.metadata, derived_toml)
+            self.set_metadata(derived_toml)
 
     def set_dependencies(self, toml_table_key: str = "project", toml_table_value: str = "dependencies"):
         """
@@ -95,7 +101,7 @@ class MetaToml:
         except Exception as exc:
             raise Exception(f"Failed to set dependencies, Exception: {exc}")
         if dependencies:
-            self.__setattr__(self.dependencies, dependencies)
+            self.set_dependencies(dependencies)
         else:
             print("Dependencies list is empty")
 
