@@ -3,9 +3,9 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pipbox"
+name = "easypip"
 version = "0.0.1"
-description = "pipbox prototype"
+description = "easypip library prototype"
 readme = "README.md"
 authors = [
     {name = "Carlos Corral-Williams", email = "c0rwil@protonmail.com"}

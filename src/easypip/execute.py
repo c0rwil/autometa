@@ -1,4 +1,4 @@
-"""pipbox.api"""
+"""easypip.execute"""
 from . import utils
 
 
