@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "easypip"
-version = "0.0.2"
+version = "0.0.3"
 description = "easypip library prototype"
 readme = "README.md"
 authors = [
@@ -19,7 +19,6 @@ dependencies = [
     "importlib_metadata",
     "toml",
     "pyyaml",
-    "json"
 ]
 
 [project.scripts]
