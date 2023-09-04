@@ -87,7 +87,7 @@ class MetaToml:
                 print("Error decoding TOML from file")
             self.set_metadata(derived_toml)
 
-    def set_dependencies(self, toml_table_key: str = "project", toml_table_value: str = "dependencies"):
+    def parse_dependencies_from_toml(self, toml_table_key: str = "project", toml_table_value: str = "dependencies"):
         """
             :param toml_table_value: variable name in toml that you want to pull a list from
             :param toml_table_key: subheading / table name in TOML holding the dependencies variable
