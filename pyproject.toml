@@ -18,6 +18,8 @@ dependencies = [
     "pytest",
     "importlib_metadata",
     "toml",
+    "pyyaml",
+    "json"
 ]
 
 [project.scripts]
