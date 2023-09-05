@@ -20,9 +20,7 @@ def tomlify(absolute_file_path: str, toml_var:str = "META_TOML"):
     elif absolute_file_path.endswith('.py'):
         toml_contents = load_toml_from_meta_toml_str(absolute_file_path=absolute_file_path, toml_var=toml_var)
     try:
-        print(toml_contents)
         derived_toml = toml.loads(toml_contents)
-        print(derived_toml)
     except toml.TomlDecodeError:
         print("Error decoding TOML from file")
     return derived_toml
@@ -50,5 +48,4 @@ def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TO
     except Exception as exc:
         print(f"Error while trying to read file's metadata, exception: \n {exc}")
     finally:
-        print(toml_contents)
         return toml_contents
