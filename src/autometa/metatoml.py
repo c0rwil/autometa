@@ -84,17 +84,21 @@ class MetaToml:
             :return: list of strings, pip-package install-list if present
         """
         dependencies = []
+        if not self.metadata:
+            self.update_metadata()
+            print(f"metadata wasn't populated, doing now... {self.metadata}")
         derived_metadata = self.get_file_metadata()
-        try:
-            if toml_table_key in derived_metadata and toml_table_value in derived_metadata[toml_table_key]:
-                dependencies = derived_metadata[toml_table_key][toml_table_value]
-        except Exception as exc:
-            raise Exception(f"Failed to set dependencies, Exception: {exc}")
-        if dependencies:
-            self.set_dependencies(dependencies)
-            print("Dependencies successfully parsed: " + self.get_dependencies())
-        else:
-            print("Dependencies list is empty")
+        if derived_metadata:
+            try:
+                if toml_table_key in derived_metadata and toml_table_value in derived_metadata[toml_table_key]:
+                    dependencies = derived_metadata[toml_table_key][toml_table_value]
+            except Exception as exc:
+                raise Exception(f"Failed to set dependencies, Exception: {exc}")
+            if dependencies:
+                self.set_dependencies(dependencies)
+                print("Dependencies successfully parsed: " + self.get_dependencies())
+            else:
+                print("Dependencies list is empty")
 
     def pip_install_dependencies(self, dependencies: list):
         """ attempts to pip install packages in dependencies
