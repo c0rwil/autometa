@@ -96,7 +96,7 @@ class MetaToml:
                 raise Exception(f"Failed to set dependencies, Exception: {exc}")
             if dependencies:
                 self.set_dependencies(dependencies)
-                print("Dependencies successfully parsed: " + self.get_dependencies())
+                print(f"Dependencies successfully parsed: {self.get_dependencies()}")
             else:
                 print("Dependencies list is empty")
 
