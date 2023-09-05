@@ -3,9 +3,16 @@ import json
 import toml as toml
 
 
-def tomlify(absolute_file_path: str, toml_var:str = "META_TOML"):
+def dictify(absolute_file_path: str, toml_var:str = "META_TOML"):
+    """Helper script to extract data from .json, .py, .yaml, .toml files and loads into a python dict
+
+    :param absolute_file_path: absolute path to file to parse data from
+    :param toml_var: name of variable you store a toml string into (optional)
+
+    :return: dictionary extracted by dictify
+    """
     toml_contents = ""
-    derived_toml = dict()
+    derived_metadata = dict()
     if absolute_file_path.endswith('.yaml') or absolute_file_path.endswith('.yml'):
         with open(absolute_file_path, 'r') as yml_file:
             yaml_contents = yaml.safe_load(yml_file)
@@ -20,19 +27,22 @@ def tomlify(absolute_file_path: str, toml_var:str = "META_TOML"):
     elif absolute_file_path.endswith('.py'):
         toml_contents = load_toml_from_meta_toml_str(absolute_file_path=absolute_file_path, toml_var=toml_var)
     try:
-        derived_toml = toml.loads(toml_contents)
+        derived_metadata = toml.loads(toml_contents)
     except toml.TomlDecodeError:
         print("Error decoding TOML from file")
-    return derived_toml
+    return derived_metadata
 
 
 def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TOML"):
-    """
+    """Simple approach to parse out metadata toml declared in a string
+
+    :param absolute_file_path: absolute path to file to parse data from
+    :param toml_var: name of variable you store a toml string into (defaulted)
 
     :rtype: string
     """
     try:
-        toml_contents = ""
+        toml_contents: str = ""
         with open(absolute_file_path, 'r') as file:
             line = file.readline()
             while line:
@@ -40,7 +50,6 @@ def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TO
                     line = file.readline()
                     while '\"\"\"' not in line:
                         toml_contents += line
-                        print(toml_contents)
                         line = file.readline()
                     break
                 else:

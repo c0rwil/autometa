@@ -1,10 +1,10 @@
 from subprocess import check_call, check_output
 from sys import executable
 from os import path
-from autometa.util import tomlify
+from autometa.util import dictify
 
 
-class MetaToml:
+class Autometa:
     """ An object to hold necessary attributes for parsing a variety of metadata
     """
 
@@ -19,6 +19,7 @@ class MetaToml:
     def __init__(self, absolute_file_path: str, dependencies=None, exclusions_files_path: str = None,
                  exclusions=None):
         """
+
         :param absolute_file_path: required to instantiate object, path to file to parse from
             #TODO: make this recursively append files from directory instead of 1 file?
         :param dependencies: can be added manually or will be populated later using class functions
@@ -65,23 +66,20 @@ class MetaToml:
         self.dependencies = dependencies
 
     def update_metadata(self, toml_var: str = "META_TOML"):
-        """ set metadata toml from file into a variable for use by metatoml
-        :param toml_var: variable name that is storing toml string
+        """ set metadata toml from file into a variable for use by autometa object
+
+        :param toml_var: variable name that is storing metadata toml string
         """
-        derived_toml = tomlify(absolute_file_path=self.get_source_file_path(), toml_var=toml_var)
+        derived_toml = dictify(absolute_file_path=self.get_source_file_path(), toml_var=toml_var)
         self.set_metadata(derived_toml)
 
-    # def parse_all_from_toml(self):
-    #     """"""
-    #     derived_md = self.get_file_metadata()
-    #     for header in derived_md:
-    #         for i in header:
-    #             self
     def parse_dependencies(self, toml_table_key: str = "project", toml_table_value: str = "dependencies"):
         """
-            :param toml_table_value: variable name in toml that you want to pull a list from
-            :param toml_table_key: subheading / table name in TOML holding the dependencies variable
-            :return: list of strings, pip-package install-list if present
+
+        :param toml_table_value: variable name in toml that you want to pull a list from
+        :param toml_table_key: subheading / table name in TOML holding the dependencies variable
+
+        :return: list of strings, pip-package install-list if present
         """
         dependencies = []
         if not self.metadata:
@@ -102,7 +100,8 @@ class MetaToml:
 
     def pip_install_dependencies(self, dependencies: list):
         """ attempts to pip install packages in dependencies
-            :param dependencies: list of pypi package names to install
+
+        :param dependencies: list of pypi package names to install
         """
         dependencies.append(self.get_dependencies())
         for dependency in dependencies:
@@ -116,8 +115,9 @@ class MetaToml:
 
     def pip_uninstall_dependencies(self, dependencies: list, exclusions: list):
         """attempts to pip uninstall packages listed
-            :param exclusions: list of pypi packages to never uninstall
-            :param dependencies: list of pypi package names to install
+
+        :param exclusions: list of pypi packages to never uninstall
+        :param dependencies: list of pypi package names to install
         """
 
         dependencies.append(self.get_dependencies())
