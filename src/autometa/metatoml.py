@@ -1,7 +1,7 @@
 from subprocess import check_call, check_output
 from sys import executable
 from os import path
-from src.easypip.util import tomlify
+from src.autometa.util import tomlify
 
 
 class MetaToml:
