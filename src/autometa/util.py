@@ -30,7 +30,7 @@ def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TO
 
     :rtype: string
     """
-    toml_contents = None
+    toml_contents = dict()
     try:
         with open(absolute_file_path, 'r') as file:
             line = file.readline()
@@ -44,6 +44,6 @@ def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TO
                 else:
                     line = file.readline()
     except Exception as exc:
-        print(f"error while trying to read file's metadata, exception: \n {exc}")
+        print(f"Error while trying to read file's metadata, exception: \n {exc}")
     finally:
         return toml_contents
