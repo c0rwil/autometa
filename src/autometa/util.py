@@ -4,7 +4,8 @@ import toml as toml
 
 
 def tomlify(absolute_file_path: str, toml_var:str = "META_TOML"):
-    toml_contents = None
+    toml_contents = ""
+    derived_toml = dict()
     if absolute_file_path.endswith('.yaml') or absolute_file_path.endswith('.yml'):
         with open(absolute_file_path, 'r') as yml_file:
             yaml_contents = yaml.safe_load(yml_file)
@@ -18,11 +19,11 @@ def tomlify(absolute_file_path: str, toml_var:str = "META_TOML"):
             toml_contents = toml.load(toml_file)
     elif absolute_file_path.endswith('.py'):
         toml_contents = load_toml_from_meta_toml_str(absolute_file_path=absolute_file_path, toml_var=toml_var)
-    # try:
-    #     derived_toml = toml.loads(toml_contents)
-    # except toml.TomlDecodeError:
-    #     print("Error decoding TOML from file")
-    return toml_contents
+    try:
+        derived_toml = toml.loads(toml_contents)
+    except toml.TomlDecodeError:
+        print("Error decoding TOML from file")
+    return derived_toml
 
 
 def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TOML"):
@@ -30,7 +31,7 @@ def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TO
 
     :rtype: string
     """
-    toml_contents = dict()
+    toml_contents = ""
     try:
         with open(absolute_file_path, 'r') as file:
             line = file.readline()
