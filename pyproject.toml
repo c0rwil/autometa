@@ -3,9 +3,9 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "easypip"
-version = "0.0.3"
-description = "easypip library prototype"
+name = "autometa"
+version = "0.0.4"
+description = "autometa library prototype"
 readme = "README.md"
 authors = [
     {name = "Carlos Corral-Williams", email = "c0rwil@protonmail.com"}
