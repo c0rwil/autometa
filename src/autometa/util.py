@@ -33,8 +33,8 @@ def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TO
 
     :rtype: string
     """
-    toml_contents = ""
     try:
+        toml_contents = ""
         with open(absolute_file_path, 'r') as file:
             line = file.readline()
             while line:
@@ -44,7 +44,7 @@ def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TO
                         toml_contents += line
                         print(toml_contents)
                         line = file.readline()
-                        break
+                    break
                 else:
                     line = file.readline()
     except Exception as exc:
