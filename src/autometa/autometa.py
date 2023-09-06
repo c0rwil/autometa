@@ -132,6 +132,7 @@ class Autometa:
         uninstall_list = []
 
         for dependency in dependencies:
+            dependency = dependency.lower()
             if dependency not in exclusions:
                 uninstall_list.append(dependency)
 
