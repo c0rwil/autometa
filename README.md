@@ -2,8 +2,9 @@
 
 **Autometa** is a simple & focused solution to reading metadata from a variety of file formats into a python class obj
 
+---- Using Autometa Object ----
 ```python
->>> from autometa.autometa import Autometa
+>>> from autometa import Autometa
 >>> md = Autometa(absolute_file_path="/example/file/path")
 >>> md.update_metadata(toml_var="META_TOML") #toml_var only needed if you are reading a toml string from a .py 
 
@@ -19,6 +20,32 @@
    Collecting example3 -> install attempt...  '''
 
 >>> md.pip_uninstall_dependencies(exclusions=["additionalPkg1","example1"])
+'''Found existing installation: example2 -> Uninstalling example2...
+   Found existing installation: example3 -> Uninstalling example3...
+'''
+```
+
+---- Using Autometa API ----
+```python
+>>> import autometa
+>>> md = autometa.fetch_metadata(absolute_file_path="/example/file/path", toml_var="META_TOML") #toml_var only needed 
+                                                                        # if you are reading a toml string from a .py 
+{'project': {'dependencies': ['example1', 'example2', 'example3']}}
+
+>>> dependencies = autometa.fetch_dependencies(absolute_file_path="/example/file/path", toml_table_key="project",
+                                               toml_table_value="dependencies")
+"Dependencies successfully parsed: ['example1', 'example2', 'example3']"
+
+>>>md = autometa.pip_install(absolute_file_path="/example/file/path", 
+                             manual_input_list=["additionalPkg1", "additionalPkg2"],
+                             toml_table_key="project",toml_table_value="dependencies")
+'''Collecting additionalPkg1 -> install attempt...  Collecting additionalPkg2 -> install attempt...
+   Collecting example1... -> install attempt, Collecting example2 -> install attempt... ,
+   Collecting example3 -> install attempt...  '''
+
+>>> md.pip_uninstall(absolute_file_path="/example/file/path", 
+                             exclusions_list = ["example1","additionalPkg1","additionalPkg2"],
+                             toml_table_key="project",toml_table_value="dependencies")
 '''Found existing installation: example2 -> Uninstalling example2...
    Found existing installation: example3 -> Uninstalling example3...
 '''
