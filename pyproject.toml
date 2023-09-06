@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autometa"
-version = "0.0.8"
+version = "0.0.9"
 description = "autometa library prototype"
 readme = "README.md"
 authors = [
