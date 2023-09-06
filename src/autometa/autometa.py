@@ -39,7 +39,7 @@ class Autometa:
                 self.exclusions = exclusions
                 self.metadata = None
             else:
-                raise Exception(f"Source file path {absolute_file_path} does not exist.")
+                raise Exception(f"Source file path does not exist.")
         except Exception as exc:
             raise Exception(f"Exception raised: {exc}")
 
@@ -115,7 +115,9 @@ class Autometa:
         installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
         for dependency in dependencies:
             if dependency not in installed_packages:
-                raise Exception(f"failed to pip install {dependency}")
+                print(dependencies)
+                print(installed_packages)
+                raise Exception(f"failed to pip install dependency")
 
     def pip_uninstall_dependencies(self, dependencies: list, exclusions: list):
         """attempts to pip uninstall packages listed
@@ -140,4 +142,4 @@ class Autometa:
         installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
         for dependency in uninstall_list:
             if dependency in installed_packages and dependency in uninstall_list:
-                raise Exception(f"failed to pip uninstall {dependency}")
+                raise Exception(f"failed to pip uninstall dependency")
