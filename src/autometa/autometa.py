@@ -117,7 +117,7 @@ class Autometa:
             if dependency not in installed_packages:
                 print(dependencies)
                 print(installed_packages)
-                raise Exception(f"failed to pip install dependency")
+                raise Exception(f"failed to pip install {dependency}")
 
     def pip_uninstall_dependencies(self, dependencies: list, exclusions: list):
         """attempts to pip uninstall packages listed
@@ -143,4 +143,4 @@ class Autometa:
         installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
         for dependency in uninstall_list:
             if dependency in installed_packages and dependency in uninstall_list:
-                raise Exception(f"failed to pip uninstall dependency")
+                raise Exception(f"failed to pip uninstall {dependency}")
