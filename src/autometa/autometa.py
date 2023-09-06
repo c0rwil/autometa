@@ -110,7 +110,7 @@ class Autometa:
         for dependency in dependencies:
             print(dependency)
             check_call([executable, '-m', 'pip', 'install', dependency])
-        reqs = check_output([executable, 'm', 'pip', 'freeze'])
+        reqs = check_output([executable, '-m', 'pip', 'freeze'])
 
         installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
         for dependency in dependencies:
@@ -135,7 +135,7 @@ class Autometa:
 
         for dependency in uninstall_list:
             check_call([executable, '-m', 'pip', 'uninstall', dependency, '-y'])
-        reqs = check_output([executable, 'm', 'pip', 'freeze'])
+        reqs = check_output([executable, '-m', 'pip', 'freeze'])
 
         installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
         for dependency in uninstall_list:
