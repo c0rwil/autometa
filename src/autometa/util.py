@@ -3,7 +3,7 @@ import json
 import toml as toml
 
 
-def dictify(absolute_file_path: str, toml_var:str = "META_TOML"):
+def dictify(absolute_file_path: str, toml_var: str = "META_TOML"):
     """Helper script to extract data from .json, .py, .yaml, .toml files and loads into a python dict
 
     :param absolute_file_path: absolute path to file to parse data from
@@ -33,7 +33,7 @@ def dictify(absolute_file_path: str, toml_var:str = "META_TOML"):
     return derived_metadata
 
 
-def load_toml_from_meta_toml_str(absolute_file_path:str, toml_var:str = "META_TOML"):
+def load_toml_from_meta_toml_str(absolute_file_path: str, toml_var: str = "META_TOML"):
     """Simple approach to parse out metadata toml declared in a string
 
     :param absolute_file_path: absolute path to file to parse data from
