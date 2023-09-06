@@ -57,7 +57,7 @@ Requests is ready for the demands of building robust and reliable HTTP–speakin
   - for .toml
     [project]
     dependencies = ["scrapy", "requests", "numpy"]
-  - 
+
   - for .py
     META_TOML = '''
     [project]
