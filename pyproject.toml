@@ -11,6 +11,12 @@ authors = [
     {name = "Carlos Corral-Williams", email = "c0rwil@protonmail.com"}
 ]
 requires-python = ">=3.10"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "build",
     "setuptools",
