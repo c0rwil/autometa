@@ -37,8 +37,6 @@ $ python -m pip install autometa
 
 ## Features & Best Practices
 
-Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
-
 - Parse in a variety of formatted data into an object holding a dictionary of parsed data using a single function call
 - Pip install / uninstall a list of user-input or file-fed dependencies
 - By default, dependencies are searched for under a structure that looks like this:
