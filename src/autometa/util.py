@@ -26,6 +26,9 @@ def dictify(absolute_file_path: str, toml_var: str = "META_TOML"):
             toml_contents = toml.dumps(toml.load(toml_file))
     elif absolute_file_path.endswith('.py'):
         toml_contents = load_toml_from_meta_toml_str(absolute_file_path=absolute_file_path, toml_var=toml_var)
+    else:
+        print("Invalid filepath type passed into absolute_file_path")
+        return 0
     try:
         derived_metadata = toml.loads(toml_contents)
     except toml.TomlDecodeError:
