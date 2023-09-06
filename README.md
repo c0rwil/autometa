@@ -42,32 +42,27 @@ Requests is ready for the demands of building robust and reliable HTTP–speakin
 - Parse in a variety of formatted data into an object holding a dictionary of parsed data using a single function call
 - Pip install / uninstall a list of user-input or file-fed dependencies
 - By default, dependencies are searched for under a structure that looks like this:
-  - for .json:  
-
+  - for .json:
     {
         "project":
                 {
                     "dependencies": ['example1', 'example2', 'example3']
                 }
     }
-  -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
-  - for .yaml/.yml:  
-  
+
+  - for .yaml/.yml:
     project:
         dependencies: ['example1', 'example2', 'example3']
-  -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
-  - for .toml  
   
+  - for .toml
     [project]
     dependencies = ["scrapy", "requests", "numpy"]
-  -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
-  - for .py  
-  
+  - 
+  - for .py
     META_TOML = '''
     [project]
     dependencies = ["man", "thing", "wahoo"]
     '''
-  -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
     
 ## Cloning the repository
 
