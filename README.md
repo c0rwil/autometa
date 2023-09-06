@@ -27,7 +27,7 @@
 autometa allows you to easily parse in data from .json, .yaml/.yml, .toml, and .py files into a dictionary object in 
     a python class object with a helper function to parse in a list of dependencies listed in said files.
 
-## Installing Requests and Supported Versions
+## Installing autometa
 
 autometa is available on PyPI:
 
@@ -35,7 +35,7 @@ autometa is available on PyPI:
 $ python -m pip install autometa
 ```
 
-## Supported Features & Best–Practices
+## Features & Best Practices
 
 Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
 
