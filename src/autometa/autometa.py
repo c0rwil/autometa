@@ -103,8 +103,12 @@ class Autometa:
 
         :param dependencies: list of pypi package names to install
         """
-        dependencies.append(self.get_dependencies())
+        for dependency in self.get_dependencies():
+            dependencies.append(dependency)
+        print(dependencies)
+        print(type(dependencies))
         for dependency in dependencies:
+            print(dependency)
             check_call([executable, '-m', 'pip', 'install', dependency])
         reqs = check_output([executable, 'm', 'pip', 'freeze'])
 
@@ -119,9 +123,10 @@ class Autometa:
         :param exclusions: list of pypi packages to never uninstall
         :param dependencies: list of pypi package names to install
         """
-
-        dependencies.append(self.get_dependencies())
-        exclusions.append(self.get_exclusions())
+        for dependency in self.get_dependencies():
+            dependencies.append(dependency)
+        for dependency in self.get_exclusions():
+            exclusions.append(dependency)
         uninstall_list = []
 
         for dependency in dependencies:

@@ -3,17 +3,18 @@
 **Autometa** is a simple & focused solution to reading metadata from a variety of file formats into a python class obj
 
 ```python
->>> import autometa
->>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))
->>> r.status_code
-200
->>> r.headers['content-type']
-'application/json; charset=utf8'
->>> r.encoding
-'utf-8'
->>> r.text
-'{"authenticated": true, ...'
->>> r.json()
+>>> from autometa.autometa import Autometa
+>>> md = Autometa(absolute_file_path="/example/file/path")
+>>> md.update_metadata(toml_var="META_TOML") #toml_var only needed if you are reading a toml string from a .py 
+>>> md.get_metadata()
+{'project': {'dependencies': ['example1', 'example2', 'example3']}}
+>>> md.parse_dependencies()
+"Dependencies successfully parsed: ['example1', 'example2', 'example3']"
+>>>md.pip_install_dependencies(dependencies=["additionalPkg1", "additionalPkg2"])
+'''Collecting example1... -> install attempt, Collecting example2 -> install attempt... ,
+    Collecting example3 -> install attempt... Collecting additionalPkg1 -> install attempt...  
+    Collecting additionalPkg2 -> install attempt... '''
+>>> md.pip_uninstall_dependencies(exclusions=["additionalPkg1","example1"])
 {'authenticated': True, ...}
 ```
 
