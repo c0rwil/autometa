@@ -113,8 +113,9 @@ class Autometa:
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
 
         installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
+        installed_packages = [r.lower() for r in installed_packages]
         for dependency in dependencies:
-            if dependency not in installed_packages:
+            if dependency.lower() not in installed_packages:
                 print(dependencies)
                 print(installed_packages)
                 raise Exception(f"failed to pip install {dependency}")
@@ -141,6 +142,7 @@ class Autometa:
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
 
         installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
+        installed_packages = [r.lower() for r in installed_packages]
         for dependency in uninstall_list:
             if dependency in installed_packages and dependency in uninstall_list:
                 raise Exception(f"failed to pip uninstall {dependency}")
