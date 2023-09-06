@@ -4,8 +4,8 @@
 
 ---- Using Autometa Object ----
 ```python
->>> from autometa import Autometa
->>> md = Autometa(absolute_file_path="/example/file/path")
+>>> import autometa
+>>> md = autometa.Autometa(absolute_file_path="/example/file/path")
 >>> md.update_metadata(toml_var="META_TOML") #toml_var only needed if you are reading a toml string from a .py 
 
 >>> md.get_metadata()
