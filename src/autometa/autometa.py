@@ -47,7 +47,7 @@ class Autometa:
         sfp = self.source_file_path
         return sfp
 
-    def get_file_metadata(self):
+    def get_metadata(self):
         md = self.metadata
         return md
 
@@ -85,7 +85,7 @@ class Autometa:
         if not self.metadata:
             self.update_metadata()
             print(f"metadata wasn't populated, doing now... {self.metadata}")
-        derived_metadata = self.get_file_metadata()
+        derived_metadata = self.get_metadata()
         if derived_metadata:
             try:
                 if toml_table_key in derived_metadata and toml_table_value in derived_metadata[toml_table_key]:
