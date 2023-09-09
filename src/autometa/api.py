@@ -57,7 +57,7 @@ def pip_install(manual_input_list: list = None, absolute_file_path: str = "", to
                 automd.pip_install_dependencies(dependencies=[])
         elif manual_input_list:
             automd = autometa.Autometa(dependencies=manual_input_list)
-            automd.pip_install_dependencies(automd.get_dependencies())
+            automd.pip_install_dependencies(dependencies=automd.get_dependencies())
         else:
             print("Didn't pass anything into the function call...")
     except Exception as exc:
