@@ -55,7 +55,7 @@ class Autometa:
         return sfp
 
     def get_preinstalled_packages(self):
-        prepackaged = list(self.preinstalled_packages)
+        prepackaged = self.preinstalled_packages
         return prepackaged
 
     def get_metadata(self):
@@ -72,8 +72,9 @@ class Autometa:
 
     def set_preinstalled_packages(self):
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
-        preinstalled_packages = [r.decode().split("==")[0].lower() for r in reqs.split()]
-        self.preinstalled_packages = preinstalled_packages
+        preinstalled = [r.decode().split("==")[0] for r in reqs.split()]
+        preinstalled = [r.lower() for r in preinstalled]
+        self.preinstalled_packages = preinstalled
 
     def set_source_file_path(self, absolute_filepath=""):
         if path.exists(absolute_filepath):  # check if path to file actually exists...
@@ -136,9 +137,9 @@ class Autometa:
             check_call([executable, '-m', 'pip', 'install', dependency])
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
         print("line 138")
-        installed_packages = [r.decode().split("==")[0].lower() for r in reqs.split()]
+        installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
         for dependency in dependencies:
-            if dependency not in installed_packages:
+            if dependency.lower() not in installed_packages:
                 raise Exception(f"failed to pip install {dependency}")
 
     def pip_uninstall_dependencies(self, dependencies: list = [], exclusions: list = []):
@@ -148,9 +149,9 @@ class Autometa:
         :param dependencies: list of pypi package names to install
         """
         for dependency in self.get_dependencies():
-            dependencies.append(dependency)
+            dependencies.append(dependency.lower())
         for dependency in self.get_exclusions():
-            exclusions.append(dependency)
+            exclusions.append(dependency.lower())
         uninstalls_attempted_list = []
         pre_installed_packages = self.get_preinstalled_packages()
         uninstall_set = list(set(dependencies) - set(pre_installed_packages) - set(exclusions))
