@@ -11,7 +11,7 @@ from . import autometa
 def fetch_metadata(absolute_file_path: str, toml_var: str = "META_TOML"):
     """ parses out metadata from absolute_file_path and returns a metadata dictionary object
 
-    :param absolute_file_path: requires a filepoth to fetch data from
+    :param absolute_file_path: mandatory to pass, filepath to fetch data from
     :param toml_var: name for the toml-formatted string variable (if reading from .py)
     """
     if absolute_file_path:
@@ -41,32 +41,46 @@ def fetch_dependencies(absolute_file_path: str, toml_var: str = "META_TOML",
         raise Exception("Didn't pass in a valid filepath string")
 
 
-def pip_install(absolute_file_path: str, manual_input_list: list, toml_var: str = "META_TOML",
+def pip_install(manual_input_list: list = None, absolute_file_path: str = "", toml_var: str = "META_TOML",
                 toml_table_key: str = "project", toml_table_value: str = "dependencies"):
     """ pip installs dependencies listed in Autometa.dependencies or in user-input list of dependency names
 
     """
-    if absolute_file_path:
-        automd = autometa.Autometa(absolute_file_path=absolute_file_path)
-        automd.update_metadata(toml_var=toml_var)
-        automd.parse_dependencies(toml_table_key=toml_table_key, toml_table_value=toml_table_value)
-        if manual_input_list:
-            automd.pip_install_dependencies(dependencies=manual_input_list)
+    try:
+        if absolute_file_path:
+            automd = autometa.Autometa(absolute_file_path=absolute_file_path)
+            automd.update_metadata(toml_var=toml_var)
+            automd.parse_dependencies(toml_table_key=toml_table_key, toml_table_value=toml_table_value)
+            if manual_input_list:
+                automd.pip_install_dependencies(dependencies=manual_input_list)
+            else:
+                automd.pip_install_dependencies(dependencies=[])
+        elif manual_input_list:
+            automd = autometa.Autometa(dependencies=manual_input_list)
+            automd.pip_install_dependencies(automd.get_dependencies())
         else:
-            automd.pip_install_dependencies(dependencies=[])
-    else:
-        raise Exception("Didn't pass in a valid filepath string")
+            print("Didn't pass anything into the function call...")
+    except Exception as exc:
+        raise Exception(f"{exc}")
 
 
-def pip_uninstall(absolute_file_path: str, manual_input_list: list = [], exclusions_list: list = [], toml_var: str = "META_TOML",
+def pip_uninstall(absolute_file_path: str = "", manual_input_list: list = [], exclusions_list: list = [], toml_var: str = "META_TOML",
                   toml_table_key: str = "project", toml_table_value: str = "dependencies"):
     """ pip uninstalls dependencies listed in Autometa.dependencies, skipping packages in exclusions list if it exists
 
     """
-    if absolute_file_path:
-        automd = autometa.Autometa(absolute_file_path=absolute_file_path)
-        automd.update_metadata(toml_var=toml_var)
-        automd.parse_dependencies(toml_table_key=toml_table_key, toml_table_value=toml_table_value)
-        automd.pip_uninstall_dependencies(dependencies=manual_input_list, exclusions=exclusions_list)
-    else:
-        raise Exception("Didn't pass in a valid filepath string")
+    try:
+        if absolute_file_path != "":
+            automd = autometa.Autometa(absolute_file_path=absolute_file_path,dependencies=manual_input_list,
+                                       exclusions=exclusions_list)
+            automd.update_metadata(toml_var=toml_var)
+            automd.parse_dependencies(toml_table_key=toml_table_key, toml_table_value=toml_table_value)
+            automd.pip_uninstall_dependencies()
+        elif manual_input_list:
+            automd = autometa.Autometa(dependencies=manual_input_list, exclusions=exclusions_list)
+            automd.pip_uninstall_dependencies()
+        else:
+            print("Didn't pass anything into the function call...")
+    except Exception as exc:
+        raise Exception(f"{exc}")
+

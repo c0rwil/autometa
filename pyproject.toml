@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autometa"
-version = "0.0.12"
+version = "0.0.13"
 description = "autometa library prototype"
 readme = "README.md"
 authors = [
@@ -20,9 +20,6 @@ classifiers = [
 dependencies = [
     "build",
     "setuptools",
-    "black",
-    "pytest",
-    "importlib_metadata",
     "toml",
     "pyyaml",
 ]

@@ -13,10 +13,11 @@ class Autometa:
         "exclusions_file_path",
         "dependencies",
         "exclusions",
-        "metadata"
+        "metadata",
+        "preinstalled_packages",
         ]
 
-    def __init__(self, absolute_file_path: str, dependencies=None, exclusions_files_path: str = None,
+    def __init__(self, absolute_file_path: str = "", dependencies=None, exclusions_files_path: str = "",
                  exclusions=None):
         """
 
@@ -32,20 +33,30 @@ class Autometa:
         if exclusions is None:
             exclusions = []
         try:
-            if path.exists(absolute_file_path):
-                self.source_file_path = absolute_file_path
-                self.dependencies = dependencies
-                self.exclusions_files_path = exclusions_files_path
-                self.exclusions = exclusions
-                self.metadata = None
+            if absolute_file_path != "":    # if absolute file path is not defaulted, attempt to pass in file path
+                if path.exists(absolute_file_path):  # check if path to file actually exists...
+                    self.source_file_path = absolute_file_path  # set if user input path verified
+                else:
+                    raise Exception(f"Source file path does not exist.")
             else:
-                raise Exception(f"Source file path does not exist.")
+                self.source_file_path = None
+                print("No absolute file path was passed... instantiating autometa object in user input mode")
+
+            self.dependencies = dependencies
+            self.exclusions_files_path = exclusions_files_path
+            self.exclusions = exclusions
+            self.metadata = None
+            self.preinstalled_packages = None
         except Exception as exc:
             raise Exception(f"Exception raised: {exc}")
 
     def get_source_file_path(self):
         sfp = self.source_file_path
         return sfp
+
+    def get_preinstalled_packages(self):
+        prepackaged = list(self.preinstalled_packages)
+        return prepackaged
 
     def get_metadata(self):
         md = self.metadata
@@ -58,6 +69,19 @@ class Autometa:
     def get_exclusions(self):
         ge = self.exclusions
         return ge
+
+    def set_preinstalled_packages(self):
+        reqs = check_output([executable, '-m', 'pip', 'freeze'])
+        preinstalled_packages= [r.decode().split("==")[0].lower() for r in reqs.split()]
+        self.preinstalled_packages = preinstalled_packages
+
+    def set_source_file_path(self, absolute_filepath=""):
+        if path.exists(absolute_filepath):  # check if path to file actually exists...
+            self.source_file_path = absolute_filepath  # set if user input path verified
+            return True  # to validate if setting filepath was successful or not
+        else:
+            print(f"Absolute file path {absolute_filepath} does not exist... failed to change self.source_file_path")
+            return False
 
     def set_metadata(self, metadata):
         self.metadata = metadata
@@ -98,24 +122,25 @@ class Autometa:
             else:
                 print("Dependencies list is empty")
 
-    def pip_install_dependencies(self, dependencies: list):
+    def pip_install_dependencies(self, dependencies: list = []):
         """ attempts to pip install packages in dependencies
 
         :param dependencies: list of pypi package names to install
         """
+        self.set_preinstalled_packages()    # populates the package list before this install attempt
+
         for dependency in self.get_dependencies():
             dependencies.append(dependency)
         for dependency in dependencies:
             check_call([executable, '-m', 'pip', 'install', dependency])
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
 
-        installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
-        installed_packages = [r.lower() for r in installed_packages]
+        installed_packages = [r.decode().split("==")[0].lower() for r in reqs.split()]
         for dependency in dependencies:
             if dependency.lower() not in installed_packages:
                 raise Exception(f"failed to pip install {dependency}")
 
-    def pip_uninstall_dependencies(self, dependencies: list, exclusions: list):
+    def pip_uninstall_dependencies(self, dependencies: list = [], exclusions: list = []):
         """attempts to pip uninstall packages listed
 
         :param exclusions: list of pypi packages to never uninstall
@@ -125,19 +150,17 @@ class Autometa:
             dependencies.append(dependency)
         for dependency in self.get_exclusions():
             exclusions.append(dependency)
-        uninstall_list = []
-
+        uninstalls_attempted_list = []
+        pre_installed_packages = self.get_preinstalled_packages()
+        uninstall_set = list(set(dependencies) - set(pre_installed_packages) - set(exclusions))
         for dependency in dependencies:
-            dependency = dependency.lower()
-            if dependency not in exclusions:
-                uninstall_list.append(dependency)
+            dependencies[dependency] = dependency.lower()
 
-        for dependency in uninstall_list:
+        for dependency in uninstall_set:
             check_call([executable, '-m', 'pip', 'uninstall', dependency, '-y'])
-        reqs = check_output([executable, '-m', 'pip', 'freeze'])
-
-        installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
-        installed_packages = [r.lower() for r in installed_packages]
-        for dependency in uninstall_list:
-            if dependency in installed_packages and dependency in uninstall_list:
+            uninstalls_attempted_list.append(dependency)
+        self.set_preinstalled_packages()
+        pre_installed_packages = self.get_preinstalled_packages()
+        for dependency in uninstall_set:
+            if dependency in uninstalls_attempted_list and dependency in pre_installed_packages:
                 raise Exception(f"failed to pip uninstall {dependency}")
