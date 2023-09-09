@@ -71,14 +71,12 @@ def pip_uninstall(absolute_file_path: str = None, manual_input_list: list = [], 
     """
     try:
         if absolute_file_path:
-            print("shouldnt happen rn line 78 api")
             automd = autometa.Autometa(absolute_file_path=absolute_file_path, dependencies=manual_input_list,
                                        exclusions=exclusions_list)
             automd.update_metadata(toml_var=toml_var)
             automd.parse_dependencies(toml_table_key=toml_table_key, toml_table_value=toml_table_value)
             automd.pip_uninstall_dependencies()
         elif manual_input_list:
-            print("should happen rn line 85 api")
             automd = autometa.Autometa(dependencies=manual_input_list, exclusions=exclusions_list)
             automd.pip_uninstall_dependencies()
         else:

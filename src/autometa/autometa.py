@@ -130,17 +130,24 @@ class Autometa:
         :param dependencies: list of pypi package names to install
         """
         obj_dependencies = self.get_dependencies()
-        print("line 133")
+        preinstalled = self.get_preinstalled_packages()
+
         for dependency in dependencies:
             obj_dependencies.append(dependency)
+
         for dependency in obj_dependencies:
             check_call([executable, '-m', 'pip', 'install', dependency])
+
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
-        print("line 141")
         installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
+
         for dependency in dependencies:
             if dependency.lower() not in installed_packages:
                 raise Exception(f"failed to pip install {dependency}")
+            else:
+                newly_added = list(set(installed_packages) - set(preinstalled))
+                print(newly_added)
+                self.set_dependencies(newly_added)
 
     def pip_uninstall_dependencies(self, dependencies: list = [], exclusions: list = []):
         """attempts to pip uninstall packages listed
@@ -152,17 +159,14 @@ class Autometa:
             dependencies.append(dependency.lower())
         for dependency in self.get_exclusions():
             exclusions.append(dependency.lower())
+
         uninstalls_attempted_list = []
         pre_installed_packages = self.get_preinstalled_packages()
         uninstall_set = list(set(dependencies) - set(pre_installed_packages) - set(exclusions))
-        for dependency in dependencies:
-            dependencies[dependency] = dependency.lower()
 
         for dependency in uninstall_set:
             check_call([executable, '-m', 'pip', 'uninstall', dependency, '-y'])
             uninstalls_attempted_list.append(dependency)
-        self.set_preinstalled_packages()
-        pre_installed_packages = self.get_preinstalled_packages()
         for dependency in uninstall_set:
-            if dependency in uninstalls_attempted_list and dependency in pre_installed_packages:
+            if dependency in uninstalls_attempted_list and dependency in dependencies:
                 raise Exception(f"failed to pip uninstall {dependency}")
