@@ -172,10 +172,6 @@ class Autometa:
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
         installed_packages = [r.lower().decode().split("==")[0] for r in reqs.split()]
 
-        for dependency in dependencies:
-            if dependency.lower() not in installed_packages:
-                raise Exception(f"failed to pip install {dependency}")
-
         for dependency in uninstall_set:
             if dependency.lower() in uninstalls_attempted_list and dependency in installed_packages:
                 raise Exception(f"failed to pip uninstall {dependency}")
