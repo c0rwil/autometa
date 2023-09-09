@@ -49,6 +49,7 @@ class Autometa:
             self.preinstalled_packages = None
         except Exception as exc:
             raise Exception(f"Exception raised: {exc}")
+        self.set_preinstalled_packages()
 
     def get_source_file_path(self):
         sfp = self.source_file_path
@@ -129,8 +130,6 @@ class Autometa:
         :param dependencies: list of pypi package names to install
         """
         print("line 130")
-        self.set_preinstalled_packages()    # populates the package list before this install attempt
-
         for dependency in self.get_dependencies():
             dependencies.append(dependency)
         for dependency in dependencies:
