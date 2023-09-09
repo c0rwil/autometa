@@ -131,8 +131,9 @@ class Autometa:
         """
         obj_dependencies = self.get_dependencies()
         print("line 133")
-        dependencies.append(obj_dependencies)
         for dependency in dependencies:
+            obj_dependencies.append(dependency)
+        for dependency in obj_dependencies:
             check_call([executable, '-m', 'pip', 'install', dependency])
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
         print("line 141")
