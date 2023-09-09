@@ -48,7 +48,6 @@ def pip_install(manual_input_list: list = None, absolute_file_path: str = None, 
     """
     try:
         if absolute_file_path:
-            print("this shouldnt be happening lol line 51 api")
             automd = autometa.Autometa(absolute_file_path=absolute_file_path)
             automd.update_metadata(toml_var=toml_var)
             automd.parse_dependencies(toml_table_key=toml_table_key, toml_table_value=toml_table_value)
@@ -57,14 +56,12 @@ def pip_install(manual_input_list: list = None, absolute_file_path: str = None, 
             else:
                 automd.pip_install_dependencies(dependencies=[])
         elif manual_input_list:
-            print("this should be happening lol line 60 api")
             automd = autometa.Autometa(dependencies=manual_input_list)
-            print("finished building obj line 62 api")
-            automd.pip_install_dependencies(dependencies=automd.get_dependencies())
+            automd.pip_install_dependencies()
         else:
             print("Didn't pass anything into the function call...")
     except Exception as exc:
-        raise Exception(f"{exc}")
+        raise Exception(f"Exception when pip_installing (api.py): {exc}")
 
 
 def pip_uninstall(absolute_file_path: str = None, manual_input_list: list = [], exclusions_list: list = [],
