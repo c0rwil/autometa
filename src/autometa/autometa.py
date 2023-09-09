@@ -163,10 +163,19 @@ class Autometa:
         uninstalls_attempted_list = []
         pre_installed_packages = self.get_preinstalled_packages()
         uninstall_set = list(set(dependencies) - set(pre_installed_packages) - set(exclusions))
-
+        print(f"Uninstall set is : {uninstall_set}, \npredep:{pre_installed_packages}, \ndep:{dependencies}")
         for dependency in uninstall_set:
             check_call([executable, '-m', 'pip', 'uninstall', dependency, '-y'])
             uninstalls_attempted_list.append(dependency)
+        print(f"uninstalls attempted are {uninstalls_attempted_list}")
+
+        reqs = check_output([executable, '-m', 'pip', 'freeze'])
+        installed_packages = [r.lower().decode().split("==")[0] for r in reqs.split()]
+
+        for dependency in dependencies:
+            if dependency.lower() not in installed_packages:
+                raise Exception(f"failed to pip install {dependency}")
+
         for dependency in uninstall_set:
-            if dependency in uninstalls_attempted_list and dependency in dependencies:
+            if dependency.lower() in uninstalls_attempted_list and dependency in installed_packages:
                 raise Exception(f"failed to pip uninstall {dependency}")
