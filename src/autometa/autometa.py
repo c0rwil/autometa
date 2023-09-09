@@ -131,12 +131,14 @@ class Autometa:
         """
         print("line 132")
         obj_dependencies = self.get_dependencies()
+        print(f"line 134 {obj_dependencies}")
         for dependency in obj_dependencies:
             dependencies.append(dependency)
+        print("line 137")
         for dependency in dependencies:
             check_call([executable, '-m', 'pip', 'install', dependency])
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
-        print("line 138")
+        print("line 141")
         installed_packages = [r.decode().split("==")[0] for r in reqs.split()]
         for dependency in dependencies:
             if dependency.lower() not in installed_packages:

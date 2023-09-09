@@ -60,7 +60,6 @@ def pip_install(manual_input_list: list = None, absolute_file_path: str = None, 
             print("this should be happening lol line 60 api")
             automd = autometa.Autometa(dependencies=manual_input_list)
             print("finished building obj line 62 api")
-            print(automd.get_dependencies())
             automd.pip_install_dependencies(dependencies=automd.get_dependencies())
         else:
             print("Didn't pass anything into the function call...")
