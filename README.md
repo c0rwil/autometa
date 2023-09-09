@@ -2,10 +2,10 @@
 
 **Autometa** is a simple & focused solution to reading metadata from a variety of file formats into a python class obj
 
----- Using Autometa Object ----
+---- Using Autometa Object ---- (Best if using files or for improved functionality)
 ```python
 >>> import autometa
->>> md = autometa.Autometa(absolute_file_path="/example/file/path")
+>>> md = Autometa(absolute_file_path="/example/file/path") # optional to pass filepath... use for metadata file
 >>> md.update_metadata(toml_var="META_TOML") #toml_var only needed if you are reading a toml string from a .py 
 
 >>> md.get_metadata()
@@ -14,18 +14,19 @@
 >>> md.parse_dependencies()
 "Dependencies successfully parsed: ['example1', 'example2', 'example3']"
 
->>>md.pip_install_dependencies(dependencies=["additionalPkg1", "additionalPkg2"])
+>>>md.pip_install_dependencies(dependencies=["additionalPkg1", "additionalPkg2"]) # installs related packages as well
 '''Collecting additionalPkg1 -> install attempt...  Collecting additionalPkg2 -> install attempt...
    Collecting example1... -> install attempt, Collecting example2 -> install attempt... ,
    Collecting example3 -> install attempt...  '''
 
->>> md.pip_uninstall_dependencies(exclusions=["additionalPkg1","example1"])
+>>> md.pip_uninstall_dependencies(exclusions=["additionalPkg1","example1"]) 
+                                                    # will remove newly installed related packages as well 
 '''Found existing installation: example2 -> Uninstalling example2...
    Found existing installation: example3 -> Uninstalling example3...
 '''
 ```
 
----- Using Autometa API ----
+---- Using Autometa API ---- (Quicker but less functionality-- Uninstall API not as fully developed as autometa object)
 ```python
 >>> import autometa
 >>> md = autometa.fetch_metadata(absolute_file_path="/example/file/path", toml_var="META_TOML") #toml_var only needed 
@@ -67,27 +68,27 @@ $ python -m pip install autometa
 - Parse in a variety of formatted data into an object holding a dictionary of parsed data using a single function call
 - Pip install / uninstall a list of user-input or file-fed dependencies
 - By default, dependencies are searched for under a structure that looks like this:
-  - for .json:
-    {
-        "project":
-                {
-                    "dependencies": ['example1', 'example2', 'example3']
-                }
-    }
+  - for .json:\
+    {\
+        "project":\
+                {\
+                    "dependencies": ['example1', 'example2', 'example3']\
+                }\
+    }\
 
-  - for .yaml/.yml:
-    project:
-        dependencies: ['example1', 'example2', 'example3']
+  - for .yaml/.yml:\
+    project:\
+        dependencies: ['example1', 'example2', 'example3']\
   
-  - for .toml
-    [project]
-    dependencies = ["scrapy", "requests", "numpy"]
+  - for .toml\
+    [project]\
+    dependencies = ["scrapy", "requests", "numpy"]\
 
-  - for .py
-    META_TOML = '''
-    [project]
-    dependencies = ["man", "thing", "wahoo"]
-    '''
+  - for .py\
+    META_TOML = '''\
+    [project]\
+    dependencies = ["man", "thing", "wahoo"]\
+    '''\
     
 ## Cloning the repository
 
