@@ -41,13 +41,14 @@ def fetch_dependencies(absolute_file_path: str, toml_var: str = "META_TOML",
         raise Exception("Didn't pass in a valid filepath string")
 
 
-def pip_install(manual_input_list: list = None, absolute_file_path: str = "", toml_var: str = "META_TOML",
+def pip_install(manual_input_list: list = None, absolute_file_path: str = None, toml_var: str = "META_TOML",
                 toml_table_key: str = "project", toml_table_value: str = "dependencies"):
     """ pip installs dependencies listed in Autometa.dependencies or in user-input list of dependency names
 
     """
     try:
         if absolute_file_path:
+            print("this shouldnt be happening lol line 51 api")
             automd = autometa.Autometa(absolute_file_path=absolute_file_path)
             automd.update_metadata(toml_var=toml_var)
             automd.parse_dependencies(toml_table_key=toml_table_key, toml_table_value=toml_table_value)
@@ -56,7 +57,10 @@ def pip_install(manual_input_list: list = None, absolute_file_path: str = "", to
             else:
                 automd.pip_install_dependencies(dependencies=[])
         elif manual_input_list:
+            print("this should be happening lol line 60 api")
             automd = autometa.Autometa(dependencies=manual_input_list)
+            print("finished building obj line 62 api")
+            print(automd.get_dependencies())
             automd.pip_install_dependencies(dependencies=automd.get_dependencies())
         else:
             print("Didn't pass anything into the function call...")
@@ -64,23 +68,24 @@ def pip_install(manual_input_list: list = None, absolute_file_path: str = "", to
         raise Exception(f"{exc}")
 
 
-def pip_uninstall(absolute_file_path: str = "", manual_input_list: list = [], exclusions_list: list = [], toml_var: str = "META_TOML",
-                  toml_table_key: str = "project", toml_table_value: str = "dependencies"):
+def pip_uninstall(absolute_file_path: str = None, manual_input_list: list = [], exclusions_list: list = [],
+                  toml_var: str = "META_TOML", toml_table_key: str = "project", toml_table_value: str = "dependencies"):
     """ pip uninstalls dependencies listed in Autometa.dependencies, skipping packages in exclusions list if it exists
 
     """
     try:
-        if absolute_file_path != "":
-            automd = autometa.Autometa(absolute_file_path=absolute_file_path,dependencies=manual_input_list,
+        if absolute_file_path:
+            print("shouldnt happen rn line 78 api")
+            automd = autometa.Autometa(absolute_file_path=absolute_file_path, dependencies=manual_input_list,
                                        exclusions=exclusions_list)
             automd.update_metadata(toml_var=toml_var)
             automd.parse_dependencies(toml_table_key=toml_table_key, toml_table_value=toml_table_value)
             automd.pip_uninstall_dependencies()
         elif manual_input_list:
+            print("should happen rn line 85 api")
             automd = autometa.Autometa(dependencies=manual_input_list, exclusions=exclusions_list)
             automd.pip_uninstall_dependencies()
         else:
             print("Didn't pass anything into the function call...")
     except Exception as exc:
         raise Exception(f"{exc}")
-

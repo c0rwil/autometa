@@ -72,7 +72,7 @@ class Autometa:
 
     def set_preinstalled_packages(self):
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
-        preinstalled_packages= [r.decode().split("==")[0].lower() for r in reqs.split()]
+        preinstalled_packages = [r.decode().split("==")[0].lower() for r in reqs.split()]
         self.preinstalled_packages = preinstalled_packages
 
     def set_source_file_path(self, absolute_filepath=""):
@@ -127,6 +127,7 @@ class Autometa:
 
         :param dependencies: list of pypi package names to install
         """
+        print("line 130")
         self.set_preinstalled_packages()    # populates the package list before this install attempt
 
         for dependency in self.get_dependencies():
@@ -134,10 +135,10 @@ class Autometa:
         for dependency in dependencies:
             check_call([executable, '-m', 'pip', 'install', dependency])
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
-
+        print("line 138")
         installed_packages = [r.decode().split("==")[0].lower() for r in reqs.split()]
         for dependency in dependencies:
-            if dependency.lower() not in installed_packages:
+            if dependency not in installed_packages:
                 raise Exception(f"failed to pip install {dependency}")
 
     def pip_uninstall_dependencies(self, dependencies: list = [], exclusions: list = []):
