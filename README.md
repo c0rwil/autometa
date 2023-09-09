@@ -74,21 +74,21 @@ $ python -m pip install autometa
                 {\
                     "dependencies": ['example1', 'example2', 'example3']\
                 }\
-    }\
+    }
 
   - for .yaml/.yml:\
     project:\
-        dependencies: ['example1', 'example2', 'example3']\
+        dependencies: ['example1', 'example2', 'example3']
   
   - for .toml\
     [project]\
-    dependencies = ["scrapy", "requests", "numpy"]\
+    dependencies = ["scrapy", "requests", "numpy"]
 
   - for .py\
     META_TOML = '''\
     [project]\
     dependencies = ["man", "thing", "wahoo"]\
-    '''\
+    '''
     
 ## Cloning the repository
 
