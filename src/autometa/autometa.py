@@ -147,6 +147,7 @@ class Autometa:
             else:
                 newly_added = list(set(installed_packages) - set(preinstalled))
                 self.set_dependencies(newly_added)
+                print(newly_added)
 
     def pip_uninstall_dependencies(self, dependencies: list = [], exclusions: list = []):
         """attempts to pip uninstall packages listed
@@ -170,5 +171,6 @@ class Autometa:
         installed_packages = [r.lower().decode().split("==")[0] for r in reqs.split()]
 
         for dependency in uninstall_set:
+            print(f"uninstall set is {uninstall_set}")
             if dependency.lower() in uninstalls_attempted_list and dependency in installed_packages:
                 raise Exception(f"failed to pip uninstall {dependency}")
