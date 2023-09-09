@@ -129,12 +129,9 @@ class Autometa:
 
         :param dependencies: list of pypi package names to install
         """
-        print("line 132")
         obj_dependencies = self.get_dependencies()
-        print(f"line 134 {obj_dependencies}")
-        for dependency in obj_dependencies:
-            dependencies.append(dependency)
-        print("line 137")
+        print("line 133")
+        dependencies.append(obj_dependencies)
         for dependency in dependencies:
             check_call([executable, '-m', 'pip', 'install', dependency])
         reqs = check_output([executable, '-m', 'pip', 'freeze'])
