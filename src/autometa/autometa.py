@@ -15,7 +15,7 @@ class Autometa:
         "exclusions",
         "metadata",
         "preinstalled_packages",
-        ]
+    ]
 
     def __init__(self, absolute_file_path: str = "", dependencies=None, exclusions_files_path: str = "",
                  exclusions=None):
@@ -33,7 +33,7 @@ class Autometa:
         if exclusions is None:
             exclusions = []
         try:
-            if absolute_file_path != "":    # if absolute file path is not defaulted, attempt to pass in file path
+            if absolute_file_path != "":  # if absolute file path is not defaulted, attempt to pass in file path
                 if path.exists(absolute_file_path):  # check if path to file actually exists...
                     self.source_file_path = absolute_file_path  # set if user input path verified
                 else:
@@ -96,8 +96,11 @@ class Autometa:
 
         :param toml_var: variable name that is storing metadata toml string
         """
-        derived_toml = dictify(absolute_file_path=self.get_source_file_path(), toml_var=toml_var)
-        self.set_metadata(derived_toml)
+        if self.source_file_path:
+            derived_toml = dictify(absolute_file_path=self.get_source_file_path(), toml_var=toml_var)
+            self.set_metadata(derived_toml)
+        else:
+            print("Can't update metadata without specifying a source_file_path")
 
     def parse_dependencies(self, toml_table_key: str = "project", toml_table_value: str = "dependencies"):
         """
@@ -147,7 +150,6 @@ class Autometa:
             else:
                 newly_added = list(set(installed_packages) - set(preinstalled))
                 self.set_dependencies(newly_added)
-
 
     def pip_uninstall_dependencies(self, dependencies: list = [], exclusions: list = []):
         """attempts to pip uninstall packages listed

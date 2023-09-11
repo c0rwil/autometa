@@ -64,22 +64,14 @@ def pip_install(manual_input_list: list = None, absolute_file_path: str = None, 
         raise Exception(f"Exception when pip_installing (api.py): {exc}")
 
 
-def pip_uninstall(absolute_file_path: str = None, manual_input_list: list = [], exclusions_list: list = [],
-                  toml_var: str = "META_TOML", toml_table_key: str = "project", toml_table_value: str = "dependencies"):
+def pip_uninstall(autometa_obj: autometa.Autometa, manual_input_list: list = [], exclusions: list = []):
     """ pip uninstalls dependencies listed in Autometa.dependencies, skipping packages in exclusions list if it exists
 
     """
-    try:
-        if absolute_file_path:
-            automd = autometa.Autometa(absolute_file_path=absolute_file_path, dependencies=manual_input_list,
-                                       exclusions=exclusions_list)
-            automd.update_metadata(toml_var=toml_var)
-            automd.parse_dependencies(toml_table_key=toml_table_key, toml_table_value=toml_table_value)
-            automd.pip_uninstall_dependencies()
-        elif manual_input_list:
-            automd = autometa.Autometa(dependencies=manual_input_list, exclusions=exclusions_list)
-            automd.pip_uninstall_dependencies()
-        else:
-            print("Didn't pass anything into the function call...")
-    except Exception as exc:
-        raise Exception(f"{exc}")
+    if autometa_obj:
+        try:
+            autometa_obj.pip_uninstall_dependencies(dependencies=manual_input_list, exclusions=exclusions)
+        except Exception as exc:
+            raise Exception(f"{exc}")
+    else:
+        print("Didn't pass a valid autometa object into function")

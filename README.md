@@ -2,11 +2,11 @@
 
 **Autometa** is a simple & focused solution to reading metadata from a variety of file formats into a python class obj
 
----- Using Autometa Object ---- (Best if using files or for improved functionality)
+---- Using Autometa Object ---- (Best if passing a file)
 ```python
 >>> import autometa
->>> md = Autometa(absolute_file_path="/example/file/path") # optional to pass filepath... use for metadata file
->>> md.update_metadata(toml_var="META_TOML") #toml_var only needed if you are reading a toml string from a .py 
+>>> md = Autometa(absolute_file_path="/example/file/path") # optional to pass filepath-- without filepath will only support pip installs & uninstalls
+>>> md.update_metadata(toml_var="META_TOML") #toml_var only needs to be specified if you are reading a toml string from a .py file
 
 >>> md.get_metadata()
 {'project': {'dependencies': ['example1', 'example2', 'example3']}}
@@ -26,7 +26,7 @@
 '''
 ```
 
----- Using Autometa API ---- (Quicker but less functionality-- Uninstall API not as fully developed as autometa object)
+---- Using Autometa API ----
 ```python
 >>> import autometa
 >>> md = autometa.fetch_metadata(absolute_file_path="/example/file/path", toml_var="META_TOML") #toml_var only needed 
