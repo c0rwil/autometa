@@ -4,9 +4,9 @@
 
 ---- Using Autometa Object ---- (Best if passing a file)
 ```python
->>> import autometa
+>>> from autometa import Autometa
 >>> md = Autometa(absolute_file_path="/example/file/path") # optional to pass filepath-- without filepath will only support pip installs & uninstalls
->>> md.update_metadata(toml_var="META_TOML") #toml_var only needs to be specified if you are reading a toml string from a .py file
+>>> md.update_metadata() #toml_var only needs to be specified if you are reading a toml string from a .py file
 
 >>> md.get_metadata()
 {'project': {'dependencies': ['example1', 'example2', 'example3']}}
@@ -29,8 +29,8 @@
 ---- Using Autometa API ----
 ```python
 >>> import autometa
->>> md = autometa.fetch_metadata(absolute_file_path="/example/file/path", toml_var="META_TOML") #toml_var only needed 
-                                                                        # if you are reading a toml string from a .py 
+>>> md = autometa.fetch_metadata(absolute_file_path="/example/file/path") 
+                                                                       
 {'project': {'dependencies': ['example1', 'example2', 'example3']}}
 
 >>> dependencies = autometa.fetch_dependencies(absolute_file_path="/example/file/path", toml_table_key="project",
@@ -85,9 +85,11 @@ $ python -m pip install autometa
     dependencies = ["scrapy", "requests", "numpy"]
 
   - for .py\
-    META_TOML = '''\
+    '''\
+    #META_TOML_START
     [project]\
-    dependencies = ["man", "thing", "wahoo"]\
+    dependencies = ["requests", "fastapi", "pygame"]\
+    #META_TOML_END
     '''
     
 ## Cloning the repository
