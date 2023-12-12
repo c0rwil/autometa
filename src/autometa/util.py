@@ -3,7 +3,7 @@ import json
 import toml as toml
 
 
-def dictify(absolute_file_path: str, toml_var: str = "META_TOML"):
+def dictify(absolute_file_path: str):
     """Helper script to extract data from .json, .py, .yaml, .toml files and loads into a python dict
 
     :param absolute_file_path: absolute path to file to parse data from
@@ -25,7 +25,7 @@ def dictify(absolute_file_path: str, toml_var: str = "META_TOML"):
         with open(absolute_file_path, 'r') as toml_file:
             toml_contents = toml.dumps(toml.load(toml_file))
     elif absolute_file_path.endswith('.py'):
-        toml_contents = load_toml_from_meta_toml_str(absolute_file_path=absolute_file_path, toml_var=toml_var)
+        toml_contents = load_toml_from_meta_toml_docstring(absolute_file_path=absolute_file_path)
     else:
         print("Invalid filepath type passed into absolute_file_path")
         return 0
@@ -61,3 +61,33 @@ def load_toml_from_meta_toml_str(absolute_file_path: str, toml_var: str = "META_
         print(f"Error while trying to read file's metadata, exception: \n {exc}")
     finally:
         return toml_contents
+
+
+def load_toml_from_meta_toml_docstring(absolute_file_path: str):
+    """Extracts TOML metadata from a multi-line docstring at the top of a Python file.
+
+    The metadata starts with #META_TOML_START and ends with #META_TOML_END.
+
+    :param absolute_file_path: absolute path to file to parse data from
+
+    :rtype: string
+    """
+    try:
+        toml_contents = ""
+        with open(absolute_file_path, 'r') as file:
+            content = file.read()
+
+            # Extract the docstring (assuming it's the first docstring in the file)
+            docstring_start = content.find('"""')
+            docstring_end = content.find('"""', docstring_start + 3)
+            docstring = content[docstring_start + 3:docstring_end]
+
+            # Extract TOML contents from within the docstring
+            toml_start = docstring.find("#META_TOML_START") + len("#META_TOML_START")
+            toml_end = docstring.find("#META_TOML_END", toml_start)
+            toml_contents = docstring[toml_start:toml_end].strip()
+
+    except Exception as exc:
+        print(f"Error while trying to read file's metadata, exception: \n {exc}")
+
+    return toml_contents

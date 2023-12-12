@@ -97,7 +97,7 @@ class Autometa:
         :param toml_var: variable name that is storing metadata toml string
         """
         if self.source_file_path:
-            derived_toml = dictify(absolute_file_path=self.get_source_file_path(), toml_var=toml_var)
+            derived_toml = dictify(absolute_file_path=self.get_source_file_path())
             self.set_metadata(derived_toml)
         else:
             print("Can't update metadata without specifying a source_file_path")
